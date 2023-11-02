@@ -1,21 +1,22 @@
 package com.programmers.happylotto.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
-@Table(name = "USER", schema = "happy_lotto")
+@Table(name = "user", schema = "happy_lotto")
 public class User {
     @Id
     @Column(name = "user_id", nullable = false, length = 16)
-    private String userId;
+    private UUID userId;
 
     @Column(name = "username", nullable = false, length = 20)
     private String username;
@@ -23,8 +24,8 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Column(name = "revenue", nullable = false)
-    private Integer revenue;
+    @Column(name = "revenue")
+    private Integer revenue = 0;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -38,4 +39,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    @Builder
+    private User(UUID userId, String username, String email, LocalDateTime createdAt) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.createdAt = createdAt;
+    }
 }

@@ -9,15 +9,16 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "ORDERS", schema = "happy_lotto")
+@Table(name = "orders", schema = "happy_lotto")
 public class Order {
     @Id
     @Column(name = "order_id", nullable = false, length = 16)
-    private String orderId;
+    private UUID orderId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

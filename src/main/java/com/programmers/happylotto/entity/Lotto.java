@@ -9,7 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "LOTTO", schema = "happy_lotto")
+@Table(name = "lotto", schema = "happy_lotto")
 public class Lotto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Lotto {
     @Column(name = "number", nullable = false, length = 20)
     private String number;
 
-    @Column(name = "prize", nullable = false)
+    @Column(name = "prize")
     private Integer prize;
 
 }
