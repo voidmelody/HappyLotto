@@ -33,4 +33,8 @@ public class UserService {
     public User getUserInfo(String email) {
         return userRepository.findByEmail(email).orElseThrow();
     }
+
+    public User save(User user){
+        return userRepository.save(user);
+    }
 }

@@ -1,7 +1,9 @@
 package com.programmers.happylotto.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -13,6 +15,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "orders", schema = "happy_lotto")
 public class Order {
@@ -28,7 +31,13 @@ public class Order {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Lotto> lottos = new ArrayList<>();
 
+    @Builder
+    private Order(UUID orderId, User user, LocalDateTime createdAt) {
+        this.orderId = orderId;
+        this.user = user;
+        this.createdAt = createdAt;
+    }
 }
