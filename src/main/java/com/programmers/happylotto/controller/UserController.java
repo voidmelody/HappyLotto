@@ -1,5 +1,6 @@
 package com.programmers.happylotto.controller;
 
+import com.programmers.happylotto.dto.UserResponseDto;
 import com.programmers.happylotto.dto.UserRequestDto;
 import com.programmers.happylotto.entity.User;
 import com.programmers.happylotto.service.UserService;
@@ -26,7 +27,7 @@ public class UserController {
         }
 
         User user = userService.getUserByEmailOrCreateNew(username, email);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(new UserResponseDto(user));
     }
 
     @GetMapping("/user")
@@ -35,8 +36,7 @@ public class UserController {
             String errorMessage = "이메일 형식이 잘못되었습니다.";
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-
         User user = userService.getUserInfo(email);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(new UserResponseDto(user));
     }
 }

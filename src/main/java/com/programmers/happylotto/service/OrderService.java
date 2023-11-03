@@ -1,7 +1,6 @@
 package com.programmers.happylotto.service;
 
 import com.programmers.happylotto.dto.OrderRequestDto;
-import com.programmers.happylotto.dto.OrderResponseDto;
 import com.programmers.happylotto.entity.Lotto;
 import com.programmers.happylotto.entity.Order;
 import com.programmers.happylotto.entity.User;
@@ -24,7 +23,7 @@ public class OrderService {
     private final UserService userService;
     private final LottoService lottoService;
 
-    public OrderResponseDto createOrder(@RequestBody OrderRequestDto orderRequestDto) {
+    public Order createOrder(@RequestBody OrderRequestDto orderRequestDto) {
         User user = userService.getUserByEmailOrCreateNew(orderRequestDto.username(), orderRequestDto.email());
         Order order = constructOrder(user);
         Order entityOrder = save(order);
@@ -36,12 +35,8 @@ public class OrderService {
         User updateUser = changeUserRevenue(lottoList, user);
         userService.save(updateUser);
 
-        return OrderResponseDto.builder()
-                .orderId(entityOrder.getOrderId())
-                .userId(user.getUserId())
-                .createdAt(entityOrder.getCreatedAt())
-                .lottoList(lottoList)
-                .build();
+        entityOrder.setLottos(lottoList);
+        return entityOrder;
     }
 
     private Order constructOrder(User user) {

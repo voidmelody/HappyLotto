@@ -3,6 +3,7 @@ package com.programmers.happylotto.controller;
 
 import com.programmers.happylotto.dto.OrderRequestDto;
 import com.programmers.happylotto.dto.OrderResponseDto;
+import com.programmers.happylotto.entity.Order;
 import com.programmers.happylotto.service.OrderService;
 import com.programmers.happylotto.utils.Validator;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,8 @@ public class OrderController {
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
 
-        OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto);
-        return ResponseEntity.ok(orderResponseDto);
+        Order order = orderService.createOrder(orderRequestDto);
+        return ResponseEntity.ok(new OrderResponseDto(order));
     }
 
 }
