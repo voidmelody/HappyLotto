@@ -7,9 +7,7 @@ import com.programmers.happylotto.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,6 +26,17 @@ public class UserController {
         }
 
         User user = userService.getUserByEmailOrCreateNew(username, email);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Object> getUserInfo(@RequestParam String email){
+        if (!Validator.checkEmail(email)) {
+            String errorMessage = "이메일 형식이 잘못되었습니다.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.getUserInfo(email);
         return ResponseEntity.ok(user);
     }
 }

@@ -29,4 +29,8 @@ public class UserService {
             return newUser;
         });
     }
+
+    public User getUserInfo(String email) {
+        return userRepository.findByEmail(email).orElseThrow();
+    }
 }
