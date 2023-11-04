@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public ResponseEntity<Object> registerOrLogin(@RequestBody UserRequestDto userRequestDto) {
         String username = userRequestDto.username();
         String email = userRequestDto.email();
@@ -30,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok(new UserResponseDto(user));
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public ResponseEntity<Object> getUserInfo(@RequestParam String email){
         if (!Validator.checkEmail(email)) {
             String errorMessage = "이메일 형식이 잘못되었습니다.";

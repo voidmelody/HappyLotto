@@ -21,7 +21,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping("/order")
+    @PostMapping("/orders")
     public ResponseEntity<Object> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
         String email = orderRequestDto.email();
         List<List<Integer>> lottoList = orderRequestDto.lottoList();
