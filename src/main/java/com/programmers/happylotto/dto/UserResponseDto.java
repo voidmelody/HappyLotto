@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class UserResponseDto {
         this.revenue = user.getRevenue();
         this.orders = user.getOrders().stream()
                 .map(OrderResponseDto::new)
+                .sorted(Comparator.comparing(OrderResponseDto::getCreatedAt))
                 .toList();
     }
 }

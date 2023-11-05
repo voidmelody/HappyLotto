@@ -24,7 +24,7 @@ public class OrderService {
     private final LottoService lottoService;
 
     public Order createOrder(@RequestBody OrderRequestDto orderRequestDto) {
-        User user = userService.getUserByEmailOrCreateNew(orderRequestDto.username(), orderRequestDto.email());
+        User user = userService.getUser(orderRequestDto.username(), orderRequestDto.email());
         Order order = constructOrder(user);
         Order entityOrder = save(order);
 
