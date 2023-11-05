@@ -9,11 +9,11 @@ import com.programmers.happylotto.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +37,16 @@ public class OrderController {
 
         Order order = orderService.createOrder(orderRequestDto);
         return ResponseEntity.ok(new OrderResponseDto(order));
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<Object> getOrderInfo(@RequestParam UUID orderId){
+        try{
+            OrderResponseDto orderResponseDto = orderService.getOrder(orderId);
+            return ResponseEntity.ok(orderResponseDto);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

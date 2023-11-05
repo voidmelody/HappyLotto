@@ -1,6 +1,7 @@
 package com.programmers.happylotto.service;
 
 import com.programmers.happylotto.dto.OrderRequestDto;
+import com.programmers.happylotto.dto.OrderResponseDto;
 import com.programmers.happylotto.entity.Lotto;
 import com.programmers.happylotto.entity.Order;
 import com.programmers.happylotto.entity.User;
@@ -51,6 +52,11 @@ public class OrderService {
         int revenue = lottoList.stream().mapToInt(Lotto::getPrize).sum();
         user.setRevenue(user.getRevenue() + revenue);
         return user;
+    }
+
+    public OrderResponseDto getOrder(UUID orderId){
+        Order order = orderRepository.findByOrderId(orderId).orElseThrow();
+        return new OrderResponseDto(order);
     }
 
     public Order save(Order order) {
