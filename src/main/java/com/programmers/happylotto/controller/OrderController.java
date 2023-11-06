@@ -4,10 +4,11 @@ package com.programmers.happylotto.controller;
 import com.programmers.happylotto.dto.OrderRequestDto;
 import com.programmers.happylotto.dto.OrderResponseDto;
 import com.programmers.happylotto.entity.Order;
+import com.programmers.happylotto.exception.LottoErrorCode;
+import com.programmers.happylotto.exception.UserErrorCode;
 import com.programmers.happylotto.service.OrderService;
 import com.programmers.happylotto.utils.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,26 +28,26 @@ public class OrderController {
         List<List<Integer>> lottoList = orderRequestDto.lottoList();
 
         if (!Validator.checkEmail(email)) {
-            String errorMessage = "이메일 형식이 잘못되었습니다.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException(UserErrorCode.INVALID_EMAIL_PATTERN.getDescription());
         }
         if (!Validator.checkLottoList(lottoList)) {
-            String errorMessage = "로또 번호는 6개여야 합니다.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException(LottoErrorCode.OUT_BOUND_NUMBERS.getDescription());
         }
-
-        Order order = orderService.createOrder(orderRequestDto);
-        return ResponseEntity.ok(new OrderResponseDto(order));
+        try {
+            Order order = orderService.createOrder(orderRequestDto);
+            return ResponseEntity.ok(new OrderResponseDto(order));
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException(UserErrorCode.NO_SUCH_USER.getDescription());
+        }
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<Object> getOrderInfo(@RequestParam UUID orderId){
-        try{
+    public ResponseEntity<Object> getOrderInfo(@RequestParam UUID orderId) {
+        try {
             OrderResponseDto orderResponseDto = orderService.getOrder(orderId);
             return ResponseEntity.ok(orderResponseDto);
-        } catch (NoSuchElementException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException(UserErrorCode.NO_SUCH_USER.getDescription());
         }
     }
-
 }

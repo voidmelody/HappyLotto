@@ -2,10 +2,10 @@ package com.programmers.happylotto.controller;
 
 import com.programmers.happylotto.dto.UserResponseDto;
 import com.programmers.happylotto.dto.UserRequestDto;
+import com.programmers.happylotto.exception.UserErrorCode;
 import com.programmers.happylotto.service.UserService;
 import com.programmers.happylotto.utils.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,29 +23,27 @@ public class UserController {
         String email = userRequestDto.email();
 
         if (!Validator.checkEmail(email)) {
-            String errorMessage = "이메일 형식이 잘못되었습니다.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException(UserErrorCode.INVALID_EMAIL_PATTERN.getDescription());
         }
-        try{
+        try {
             UserResponseDto userResponseDto = userService.register(username, email);
             return ResponseEntity.ok(userResponseDto);
-        } catch (IllegalArgumentException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(UserErrorCode.ALREADY_EXIST_USER.getDescription());
         }
     }
 
     @GetMapping("/users")
     public ResponseEntity<Object> getUserInfo(@RequestParam String username,
-                                              @RequestParam String email){
+                                              @RequestParam String email) {
         if (!Validator.checkEmail(email)) {
-            String errorMessage = "이메일 형식이 잘못되었습니다.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException(UserErrorCode.INVALID_EMAIL_PATTERN.getDescription());
         }
-        try{
+        try {
             UserResponseDto userResponseDto = userService.getUserInfo(username, email);
             return ResponseEntity.ok(userResponseDto);
-        } catch (NoSuchElementException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException(UserErrorCode.NO_SUCH_USER.getDescription());
         }
     }
 }
