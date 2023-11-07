@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -39,5 +40,18 @@ public class Order {
         this.orderId = orderId;
         this.user = user;
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Order order = (Order) object;
+        return Objects.equals(orderId, order.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
     }
 }
