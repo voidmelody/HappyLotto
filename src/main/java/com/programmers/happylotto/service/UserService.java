@@ -2,6 +2,7 @@ package com.programmers.happylotto.service;
 
 import com.programmers.happylotto.dto.UserResponseDto;
 import com.programmers.happylotto.entity.User;
+import com.programmers.happylotto.exception.UserErrorCode;
 import com.programmers.happylotto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class UserService {
     public UserResponseDto register(String username, String email) {
         Optional<User> existingUser = userRepository.findByUsernameAndEmail(username, email);
         if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 유저입니다.");
+            throw new IllegalArgumentException(UserErrorCode.ALREADY_EXIST_USER.getDescription());
         }
         User newUser = User.builder()
                 .userId(UUID.randomUUID())
