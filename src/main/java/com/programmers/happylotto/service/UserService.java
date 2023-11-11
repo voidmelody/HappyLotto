@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,7 +35,11 @@ public class UserService {
     }
 
     public User getUser(String username, String email) {
-        return userRepository.findByUsernameAndEmail(username, email).orElseThrow();
+        Optional<User> optionalUser = userRepository.findByUsernameAndEmail(username, email);
+        if (optionalUser.isEmpty()) {
+            throw new NoSuchElementException(UserErrorCode.NO_SUCH_USER.getDescription());
+        }
+        return optionalUser.get();
     }
 
     public UserResponseDto getUserInfo(String username, String email) {

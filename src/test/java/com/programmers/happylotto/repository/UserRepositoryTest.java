@@ -1,6 +1,8 @@
 package com.programmers.happylotto.repository;
 
 import com.programmers.happylotto.entity.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +24,31 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
+    @BeforeEach
+    void setUser() {
+        userRepository.save(user);
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.delete(user);
+    }
+
+    static final String targetEmail = "test1234@gmail.com";
+    static final String targetUsername = "test봇";
+    static final User user = User.builder()
+            .userId(UUID.randomUUID())
+            .username(targetUsername)
+            .email(targetEmail)
+            .createdAt(LocalDateTime.now())
+            .build();
+
     @DisplayName("유저 이름과 이메일을 통해 유저를 조회할 수 있다.")
     @Test
     void findByUsernameAndEmail() {
         //given
         String targetEmail = "test1234@gmail.com";
         String targetUsername = "test봇";
-        User user = User.builder()
-                .userId(UUID.randomUUID())
-                .username(targetUsername)
-                .email(targetEmail)
-                .createdAt(LocalDateTime.now())
-                .build();
-        userRepository.save(user);
 
         //when //then
         Optional<User> foundUserOptional = userRepository.findByUsernameAndEmail(targetUsername, targetEmail);
@@ -48,16 +62,7 @@ class UserRepositoryTest {
     @Test
     void findByInvalidUsernameAndEmail(){
         //given
-        String targetEmail = "test1234@gmail.com";
-        String targetUsername = "test봇";
         String invalidUsername = "테스트봇";
-        User user = User.builder()
-                .userId(UUID.randomUUID())
-                .username(targetUsername)
-                .email(targetEmail)
-                .createdAt(LocalDateTime.now())
-                .build();
-        userRepository.save(user);
 
         //when //then
         Optional<User> foundInvalidUserOptional = userRepository.findByUsernameAndEmail(invalidUsername, targetEmail);
@@ -70,17 +75,7 @@ class UserRepositoryTest {
     @Test
     void findByUsernameAndInvalidEmail(){
         //given
-        String targetEmail = "test1234@gmail.com";
         String invalidEmail = "test1234@naver.com";
-        String targetUsername = "test봇";
-
-        User user = User.builder()
-                .userId(UUID.randomUUID())
-                .username(targetUsername)
-                .email(targetEmail)
-                .createdAt(LocalDateTime.now())
-                .build();
-        userRepository.save(user);
 
         //when //then
         Optional<User> foundInvalidUserOptional = userRepository.findByUsernameAndEmail(targetUsername, invalidEmail);
